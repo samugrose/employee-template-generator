@@ -1,66 +1,103 @@
-const path = require("path");
+const employee = require("./Employee");
+const manager = require("./Manager");
+const engineer = require("./Engineer");
+const intern = require("./Intern");
+
 const fs = require("fs");
+const inquirer = require("inquirer");
 
-const templatesDir = path.resolve(__dirname, "../templates");
+const employees = [];
+const done = false; //boolean flag to trigger end of recursion
+let id = 1;
+inquirer.prompt(
+    [
+        {
+            type: "input",
+            message: "What is the manager's name?",
+            name: "mname"
+        },
+        {
+            type: "input",
+            message: "What is the manager's office number?",
+            name: "moffice"
+        },
+        {
+            type: "input",
+            message: "What is the manager's email?",
+            name: "memail"
+        }
+    ]
 
-const render = employees => {
-  const html = [];
+).then(function(response) {
+    const manager = new manager(mname, id, memail, moffice );
+    employees.push(manager);
+    console.log(manager);
+    id++; //makes it so that id is now 2
+    //recursivelyGen(done);
+});
 
-  html.push(employees
-    .filter(employee => employee.getRole() === "Manager")
-    .map(manager => renderManager(manager))
-  );
-  html.push(employees
-    .filter(employee => employee.getRole() === "Engineer")
-    .map(engineer => renderEngineer(engineer))
-  );
-  html.push(employees
-    .filter(employee => employee.getRole() === "Intern")
-    .map(intern => renderIntern(intern))
-  );
+function recursivelyGen(done) {
+    if (!done) {
+        //generate employees and recurse
+        inquirer.prompt(
+            [
+                {
+                    type:"list",
+                    message: "what type of license would you like?",
+                    name: "emptype",
+                    choices: [
+                        "Intern",
+                        "Engineer",
+                        "Exit";
+                    ]
+                }
+            ]
+        ).then(function(response) {
+            if (response.emptype === "Intern") {
+            inquirer.prompt(
+                [
+                {
+                    type: "input",
+                    message: "What is the Intern's name?",
+                    name: "name"
+                },
+                {
+                    type: "input",
+                    message: "What is the Intern's email?",
+                    name: "email"
+                },
+                {
+                    type: "input",
+                    message: "What is the Intern's school?",
+                    name: "school"
+                }
+            ]
+            ).then(function(response) {
 
-  return renderMain(html.join(""));
+            })
+            } else if(response.emptype === "Engineer") {
+            inquirer.prompt(
+                [
+                {
+                    type: "input",
+                    message: "What is the manager's office number?",
+                    name: "moffice"
+                },
+                {
+                    type: "input",
+                    message: "What is the manager's email?",
+                    name: "memail"
+                }
+            ]
+            ).then(function(response) {
+                
+            })
+            } else { // leave
 
-};
+            }
+    })
+    } else {
+        console.log("printing list");
+    }
+}
 
-const renderManager = manager => {
-  let template = fs.readFileSync(path.resolve(templatesDir, "manager.html"), "utf8");
-  template = replacePlaceholders(template, "name", manager.getName());
-  template = replacePlaceholders(template, "role", manager.getRole());
-  template = replacePlaceholders(template, "email", manager.getEmail());
-  template = replacePlaceholders(template, "id", manager.getId());
-  template = replacePlaceholders(template, "officeNumber", manager.getOfficeNumber());
-  return template;
-};
-
-const renderEngineer = engineer => {
-  let template = fs.readFileSync(path.resolve(templatesDir, "engineer.html"), "utf8");
-  template = replacePlaceholders(template, "name", engineer.getName());
-  template = replacePlaceholders(template, "role", engineer.getRole());
-  template = replacePlaceholders(template, "email", engineer.getEmail());
-  template = replacePlaceholders(template, "id", engineer.getId());
-  template = replacePlaceholders(template, "github", engineer.getGithub());
-  return template;
-};
-
-const renderIntern = intern => {
-  let template = fs.readFileSync(path.resolve(templatesDir, "intern.html"), "utf8");
-  template = replacePlaceholders(template, "name", intern.getName());
-  template = replacePlaceholders(template, "role", intern.getRole());
-  template = replacePlaceholders(template, "email", intern.getEmail());
-  template = replacePlaceholders(template, "id", intern.getId());
-  template = replacePlaceholders(template, "school", intern.getSchool());
-  return template;
-};
-
-const renderMain = html => {
-  const template = fs.readFileSync(path.resolve(templatesDir, "main.html"), "utf8");
-  return replacePlaceholders(template, "team", html);
-};
-
-const replacePlaceholders = (template, placeholder, value) => {
-  const pattern = new RegExp("{{ " + placeholder + " }}", "gm");
-  return template.replace(pattern, value);
-};
-
-module.exports = render;
