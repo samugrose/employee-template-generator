@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/samugrose/employee-template-generator#readme",
   "dependencies": {
-    "inquirer": "^7.3.0"
+    "fs": "0.0.1-security",
+    "inquirer": "^7.3.0",
+    "jest": "^26.1.0"
   }
 }
