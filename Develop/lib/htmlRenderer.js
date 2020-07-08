@@ -141,10 +141,19 @@ function recursivelyGen(done) {
             <div class="team-area col-12 d-flex justify-content-center">`
                  //run for loop here, adding cards as needed from strings imported
 
-
+                var counter = 0;
                 for (let i = 0; i < employees.length; i++) {
+                    if (counter === 3) {
+                        counter = 0;
+                        //close off row and column, start new one
+                        mainstring += `</div>
+                        </div>
+                        <div class="row">
+                        <div class="team-area col-12 d-flex justify-content-center">`
+                    }
+                    
                     if (employees[i].getRole() === "Manager") {
-                        mainstring += `<div class="card employee-card">
+                        mainstring += `<div class="card employee-card col-md-4">
                         <div class="card-header">
                             <h2 class="card-title">${employees[i].name}</h2>
                             <h3 class="card-title"><i class="fas fa-mug-hot mr-2"></i>${employees[i].getRole()}</h3>
@@ -161,7 +170,7 @@ function recursivelyGen(done) {
 
                     } else if  (employees[i].getRole() === "Engineer") {
 
-                       mainstring += `<div class="card employee-card">
+                       mainstring += `<div class="card employee-card col-md-4">
     <div class="card-header">
         <h2 class="card-title">${employees[i].name}</h2>
         <h3 class="card-title"><i class="fas fa-glasses mr-2"></i>${employees[i].getRole()}</h3>
@@ -176,7 +185,7 @@ function recursivelyGen(done) {
 </div>`
                     } else if (employees[i].getRole() === "Intern") {
 
-                        mainstring += `<div class="card employee-card">
+                        mainstring += `<div class="card employee-card col-md-4">
                         <div class="card-header">
                             <h2 class="card-title">${employees[i].name}</h2>
                             <h3 class="card-title"><i class="fas fa-user-graduate mr-2"></i>${employees[i].getRole()}</h3>
@@ -190,6 +199,7 @@ function recursivelyGen(done) {
                         </div>
                     </div>`
                     }
+                    counter++;
                 }
 
                 // append this to mainstring
