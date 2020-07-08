@@ -1,7 +1,7 @@
-const employee = require("./Employee");
-const manager = require("./Manager");
-const engineer = require("./Engineer");
-const intern = require("./Intern");
+const Employee = require("./Employee");
+const Manager = require("./Manager");
+const Engineer = require("./Engineer");
+const Intern = require("./Intern");
 
 const fs = require("fs");
 const inquirer = require("inquirer");
@@ -29,11 +29,11 @@ inquirer.prompt(
     ]
 
 ).then(function(response) {
-    const manager = new manager(mname, id, memail, moffice );
+    const manager = new Manager(response.mname, id, response.memail, response.moffice );
     employees.push(manager);
     console.log(manager);
     id++; //makes it so that id is now 2
-    //recursivelyGen(done);
+    recursivelyGen(done);
 });
 
 function recursivelyGen(done) {
@@ -48,7 +48,7 @@ function recursivelyGen(done) {
                     choices: [
                         "Intern",
                         "Engineer",
-                        "Exit";
+                        "Exit"
                     ]
                 }
             ]
@@ -73,27 +73,40 @@ function recursivelyGen(done) {
                 }
             ]
             ).then(function(response) {
-
+                let intern = new Intern(response.name, id, response.email, response.school);
+                console.log(intern);
+                employees.push(intern);
+                id++;
+                recursivelyGen(done);
             })
             } else if(response.emptype === "Engineer") {
             inquirer.prompt(
                 [
                 {
                     type: "input",
-                    message: "What is the manager's office number?",
-                    name: "moffice"
+                    message: "What is the Engineer's name?",
+                    name: "name"
                 },
                 {
                     type: "input",
-                    message: "What is the manager's email?",
-                    name: "memail"
+                    message: "What is the Engineer's email?",
+                    name: "email"
+                },
+                {
+                    type: "input",
+                    message: "What is the Engineer's github username?",
+                    name: "github"
                 }
             ]
             ).then(function(response) {
-                
+                let engineer = new Engineer(response.name, id, response.email, response.github);
+                console.log(engineer);
+                employees.push(engineer);
+                id++;
+                recursivelyGen(done);
             })
             } else { // leave
-
+                recursivelyGen(!done);
             }
     })
     } else {
